@@ -1,0 +1,8 @@
+{
+  "ThingSpeak": {
+	"ACCOUNT_API_KEY" : "", 
+	"CHANNEL_ID" : ,
+	"READ_API_KEY" : "",
+	"WRITE_API_KEY" : ""
+  }
+}

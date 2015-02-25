@@ -1,0 +1,25 @@
+{
+  "name": "iotPlataforma",
+  "version": "1.0.0",
+  "description": "modo lectura de los datos publicadoss en thingspeak",
+  "main": "node readthing.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gcba/iotPlataforma.git"
+  },
+  "keywords": [
+    "iot"
+  ],
+  "author": "lmokto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gcba/iotPlataforma/issues"
+  },
+  "homepage": "https://github.com/gcba/iotPlataforma",
+  "dependencies": {
+    "thingspeakclient": "^0.4.0"
+  }
+}

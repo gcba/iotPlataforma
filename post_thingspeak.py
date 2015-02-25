@@ -1,45 +1,82 @@
-import httplib, urllib
-from time import sleep
-import random
-from pprint import pprint 
+import httplib
 
-APY_KEY = ''
+from pprint import pprint
+from time import sleep, asctime
+from urllib import urlencode
+from cStringIO import StringIO
+from random import randrange
+from gzip import GzipFile
+from json import loads
 
-def post_things():
+
+with open("./config.json") as f:
+    config = json.loads(f.read())
+	APY_KEY = config["ThingSpeak"]["ACCOUNT_API_KEY"].encode("utf-8")
+
+def readresponse(read):
+
+	stream = StringIO(read)
+	with GzipFile(mode="rb", fileobj=stream) as f:
+		source = f.read()
+		datajson = loads(source)
+		return datajson
+
+def post_things(debug=0, result=0):
+
+	field1 = randrange(231)
+	field2 = randrange(31)
+	created_at = asctime()
+
+	params = urlencode({
+		'field1': field1, 
+		'field2': field2, 
+		'created_at': created_at, 
+		'key':APY_KEY
+	})
 	
-	field1 = random.randrange(231)
-	field2 = random.randrange(31)
-
-	params = urllib.urlencode({'field1': field1, 'field2': field2,'key':APY_KEY})
-	headers = { "Content-type": "application/x-www-form-urlencoded", 'accept-charset': 'utf-8,*', 'cache-control': 'no-cache', \
-	'accept-encoding': 'gzip,deflate,sdch', 'accept': 'text/plain', 'accept-language': 'es,en-US;q=0.8,en;q=0.6', \
-	'user-agent': "Mozilla/5.0 (X11; Linux x86_64)", 'connection': 'keep-alive', 'DNT': 1 }
-	httplib.HTTPSConnection.debuglevel = 1
+	headers = {
+		"Content-type": "application/x-www-form-urlencoded", \
+		'accept-charset': 'utf-8,*', \
+		'cache-control': 'no-cache', \
+		'accept-encoding': 'gzip,deflate,sdch', \
+		'accept': 'text/plain', \
+		'accept-language': 'es,en-US;q=0.8,en;q=0.6', \
+		'user-agent': "Mozilla/5.0 (X11; Linux x86_64)", \
+		'connection': 'keep-alive', \
+		'DNT': 1 
+	}
+	
+	httplib.HTTPSConnection.debuglevel = debug
 	conn = httplib.HTTPSConnection("api.thingspeak.com:443")
 
 	try:
-		print "HEADERS REQUEST"
-		print "-" * 40
-		conn.request("POST", "/update", params, headers)
+		if debug:
+			print "-" * 40
+			print "NEW REQUEST"
+			print "-" * 40
+			print "HEADERS REQUEST"
+			print "-" * 40
+		conn.request("POST", "/update.json", params, headers)
 		response = conn.getresponse()
-		res_headers = dict(response.getheaders() + [("status", response.status)])
-		print "-" * 40
-		print "HEADERS RESPONSE"
-		print "-" * 40
-		#pprint(res_headers)
-		print "field1: {0}".format(field1)
-		print "field2: {0}".format(field2)
-		print "status: {0}".format(res_headers.get("status"))
-		print "reason: {0}".format(response.reason)
-		print "-" * 40
-		#data = response.read()
+		if debug:
+			res_headers = dict(response.getheaders() + [("status", response.status)])
+			print "-" * 40
+			print "HEADERS RESPONSE"
+			print "-" * 40
+			pprint(res_headers)
+		if result:
+			print "-" * 40
+			print "RESULT RESPONSE"
+			print "-" * 40
+			dataencoding = response.read()
+			data = readresponse(dataencoding)
+			pprint(data)
 		conn.close()
 	except:
 		print "connection failed"
 
-
 if __name__ == '__main__':
 
 	while True:
-		post_things()
-		sleep(8)
+		post_things(debug=1, result=0)
+		sleep(18)
