@@ -7,7 +7,7 @@ var cb = function(err, res){
 	if (err)
 		throw err
 }
-console.log(READ_API_KEY)
+
 /*
 	https://github.com/imwebgefunden/thingspeakclient_node
 
