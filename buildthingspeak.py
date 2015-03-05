@@ -229,12 +229,18 @@ class Channels(TalkBack):
 		tweet (string) - Twitter status update; see updating ThingTweet (optional)
 		created_at (datetime) - Date when this feed entry was created, in ISO 8601 format,
 		"""
+		
+		__valids = [
+			"field1", "field2", "field3", "field4", "field5", "field6", "field7", \
+			"field8", "created_at", "status", "latitude", "longitude", "elevation", "location"
+		]
+		
 		valid = 0
 		params = parameters.iteritems()
+		
 		if not valid:
 			for key, value in params:
-				if not key in ["field1", "field2", "field3", "field4", "field5", "field6", \
-				"field7", "field8", "created_at", "status", "latitude", "longitude", "elevation", "location"]:
+				if not key in __valids:
 					del parameters[key]
 		valid = 1
 		self.__ins._ThingSpeak__send(**parameters)
@@ -678,7 +684,7 @@ if __name__ == '__main__':
 
 	APIKEY = "K8P9HHY4RM85BUP8"
 	WRITEKEY = "IJI9SJDSAFJYDBR2"
-	
+
 	channel = ThingSpeak(accountkey=APIKEY)
 	sensor3 = channel.instance(id=27992, accountkey=APIKEY, writekey=WRITEKEY, readkey="")
 	sensor3.update(
