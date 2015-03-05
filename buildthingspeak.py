@@ -26,9 +26,11 @@ class TalkBack:
 		The following steps would allow you to control a door that opens only once:
 		Create a new TalkBack using the web interface.
 		Add some queued commands using the web interface or API, such as "OPENDOOR", "CLOSEDOOR".
-		If the door (with Wi-Fi and a connected motion sensor) senses someone nearby, execute the next command from ThingSpeak: "OPENDOOR".
+		If the door (with Wi-Fi and a connected motion sensor) senses someone nearby, 
+		execute the next command from ThingSpeak: "OPENDOOR".
 		After 5 minutes of no motion detected, execute the next command from ThingSpeak: "CLOSEDOOR".
-		When someone else approaches the door, execute the next command from ThingSpeak, which will be empty--the door won't open again until more commands are added to the queue.
+		When someone else approaches the door, execute the next command from ThingSpeak, \
+		which will be empty--the door won't open again until more commands are added to the queue.
 	"""
 	def __init__(self, instance, TalkBackID=None, TalkBackKEY=None):
 
@@ -45,7 +47,8 @@ class TalkBack:
 			There is no limit to the number of commands that a single TalkBack can have. 
 
 			Valid parameters:
-				command_string (string) - Command to be sent to your device. There is a limit of 255 characters per command_string.
+				command_string (string) - Command to be sent to your device. \
+				There is a limit of 255 characters per command_string.
 				position (integer) - The position you want this command to appear in. 
 					Any previous commands at or after this position will be shifted down. 
 					If the position is left blank, the command will automatically be added to the end of the queue.
