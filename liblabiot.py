@@ -1,3 +1,4 @@
+
 import time
 import datetime
 import urllib
@@ -8,8 +9,13 @@ import urllib2, base64
 from config import Config
 
 # abrimos archivo de configuracion
-f = file('labiot.cfg')
-cfg = Config(f)
+def opencfg(name):
+	with file(name) as f:
+		cfg = Config(f)
+		return cfg
+
+cfg = opencfg('labiot.cfg')
+listendpoints = opencfg('listpaths.cfg')
 
 # asignamos los parametros de configuracion
 url = cfg.urlname
@@ -17,16 +23,7 @@ username = cfg.username
 password = cfg.password
 sensor = cfg.sensor
 datatype = cfg.datatype
-
-# listamos path de api
-DATOS = [
-	# {0} = id
-	"/api/data/create",
-	"/api/data/dynamic/create",
-	"/api/data/{0}",
-	"/api/data/{0}/last",
-	"/api/data/{0}/status"
-]
+datos = listendpoints.datos
 
 # creamos parametros
 query_args = {
@@ -37,7 +34,7 @@ query_args = {
 	"data2": "5"
 }
 
-urlpath = url+DATOS[1]
+urlpath = url+datos[1]
 # funcion para el request
 def __request(username, password, url, query_args):
 
