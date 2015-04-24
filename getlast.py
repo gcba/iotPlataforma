@@ -16,6 +16,11 @@ datatype = cfg.datatype
 
 if __name__ == '__main__':
 	
+	"""
+		script que traer los datos enviados por liblabiot, cada 10 segundos.
+		y los muestra en pantalla, con timestamp, y valores de los campos ['ANPS', 'VNOPS'].
+	"""
+
 	while True:
 
 		try:

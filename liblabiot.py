@@ -1,10 +1,10 @@
-
 import time
 import urllib
 import json
 import urllib2, base64
 from config import Config
 import random
+
 
 # abrimos archivo de configuracion
 def opencfg(name):
@@ -32,6 +32,11 @@ def __request(username, password, url, query_args):
 
 
 def functpost():
+
+	"""
+		funcion se autentica con basic auth, tomando variables del archivo de configuracion labiot.cfg
+		luego cada 10 segundos, envia un post con datos random, a los campos ['ANPS', 'VNOPS'].
+	"""
 
 	url = cfg.urlname
 	username = cfg.username
@@ -67,4 +72,5 @@ def functpost():
 
 
 if __name__ == '__main__':
+
 	functpost()
