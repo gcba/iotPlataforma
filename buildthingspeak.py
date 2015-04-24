@@ -19,16 +19,18 @@ from json import loads
 
 class TalkBack:
 	"""
-		TalkBack allows any device to act upon queued commands. 
+	TalkBack allows any device to act upon queued commands. 
 
-		TalkBack Example
+	TalkBack Example
 
-		The following steps would allow you to control a door that opens only once:
-		Create a new TalkBack using the web interface.
-		Add some queued commands using the web interface or API, such as "OPENDOOR", "CLOSEDOOR".
-		If the door (with Wi-Fi and a connected motion sensor) senses someone nearby, execute the next command from ThingSpeak: "OPENDOOR".
-		After 5 minutes of no motion detected, execute the next command from ThingSpeak: "CLOSEDOOR".
-		When someone else approaches the door, execute the next command from ThingSpeak, which will be empty--the door won't open again until more commands are added to the queue.
+	The following steps would allow you to control a door that opens only once:
+	Create a new TalkBack using the web interface.
+	Add some queued commands using the web interface or API, such as "OPENDOOR", "CLOSEDOOR".
+	If the door (with Wi-Fi and a connected motion sensor) senses someone nearby, 
+	execute the next command from ThingSpeak: "OPENDOOR".
+	After 5 minutes of no motion detected, execute the next command from ThingSpeak: "CLOSEDOOR".
+	When someone else approaches the door, execute the next command from ThingSpeak, \
+	which will be empty--the door won't open again until more commands are added to the queue.
 	"""
 	def __init__(self, instance, TalkBackID=None, TalkBackKEY=None):
 
@@ -39,35 +41,37 @@ class TalkBack:
 
 	def addcmd(self, **parameters):
 		"""
-			Add a TalkBack Command
+		Add a TalkBack Command
 
-			To add a TalkBack command, send an HTTP POST.
-			There is no limit to the number of commands that a single TalkBack can have. 
+		To add a TalkBack command, send an HTTP POST.
+		There is no limit to the number of commands that a single TalkBack can have. 
 
-			Valid parameters:
-				command_string (string) - Command to be sent to your device. There is a limit of 255 characters per command_string.
-				position (integer) - The position you want this command to appear in. 
-					Any previous commands at or after this position will be shifted down. 
-					If the position is left blank, the command will automatically be added to the end of the queue.
+		Valid parameters:
+		command_string (string) - Command to be sent to your device. \
+		There is a limit of 255 characters per command_string.
+		position (integer) - The position you want this command to appear in. 
+		Any previous commands at or after this position will be shifted down. 
+		If the position is left blank, the command will automatically be added to the end of the queue.
 
-			The response will be the command ID, for example: 18
+		The response will be the command ID, for example: 18
 		"""
 		path = "/talkbacks/{0}/commands".format(self.__idtalkback)
 		__add = [
 			"command_string", "position"
 		]
-		result = self.__ins._Channels__ins._before_insert("POST", True, path, {'api_key':self.__key}, __add, **parameters)
+		result = self.__ins._Channels__ins._before_insert("POST", True, path, \
+			{'api_key':self.__key}, __add, **parameters)
 		return result
 
 	def get_cmd(self, id):
 		"""
-			Get a TalkBack Command
-			To show an existing TalkBack command, send an HTTP GET.
+		Get a TalkBack Command
+		To show an existing TalkBack command, send an HTTP GET.
 
-			Valid parameters:
-				api_key (string) - API key for this specific TalkBack (required)
+		Valid parameters:
+		id (string) - API key for this specific TalkBack (required)
 
-			The response will be the command string, for example: OPENDOOR
+		The response will be the command string, for example: OPENDOOR
 		"""
 		path = "/talkbacks/{0}/commands/{1}".format(self.__idtalkback, id)
 		result = self.__ins._Channels__ins._before_insert("GET", True, path, {'api_key':self.__key})
@@ -75,33 +79,34 @@ class TalkBack:
 
 	def update_cmd(self, **parameters):
 		"""
-			Update a TalkBack Command
-			To update an existing TalkBack command, send an HTTP PUT.
-		
-			Valid parameters:
-				command_string (string) - Command to be sent to your device
-				position (integer) - The position you want this command to appear in.
+		Update a TalkBack Command
+		To update an existing TalkBack command, send an HTTP PUT.
+	
+		Valid parameters:
+		command_string (string) - Command to be sent to your device
+		position (integer) - The position you want this command to appear in.
 
-			The response will be the command string, for example: OPENDOOR
+		The response will be the command string, for example: OPENDOOR
 		"""
 		__updcmd = [
 			"command_string", "position"
 		]		
 		path = "/talkbacks/{0}/commands/{1}".format(self.__idtalkback, parameters.get("id"))
 		del parameters['id']
-		result = self.__ins._Channels__ins._before_insert("PUT", False, path, {'api_key':self.__key}, __updcmd, **parameters)
+		result = self.__ins._Channels__ins._before_insert("PUT", False, path, \
+			{'api_key':self.__key}, __updcmd, **parameters)
 		return result
 
 	def execute(self):
 		"""
-			Execute the Next TalkBack Command
-			To execute the next TalkBack command in the queue (normally in position 1), send an HTTP GET or POST.
+		Execute the Next TalkBack Command
+		To execute the next TalkBack command in the queue (normally in position 1), send an HTTP GET or POST.
 
-			Executing a command removes it from the queue, sets executed_at to the current time, sets position to null, 
-			and reorders the remaining commands. 
+		Executing a command removes it from the queue, sets executed_at to the current time, 
+		sets position to null, and reorders the remaining commands.
 
-			The response will be the command string, for example: OPENDOOR 
-				If there are no commands left to execute, the response body will be empty.
+		The response will be the command string, for example: OPENDOOR 
+		If there are no commands left to execute, the response body will be empty.
 		"""		
 		path = "/talkbacks/{0}/commands/execute".format(self.__idtalkback)
 		result = self.__ins._Channels__ins._before_insert("POST", False, path, {'api_key':self.__key})
@@ -109,9 +114,9 @@ class TalkBack:
 
 	def delete_cmd(self, id):
 		"""
-			Delete a TalkBack Command	
-				To delete an existing TalkBack command, send an HTTP DELETE.
-				The response will be the deleted command string, for example: OPENDOOR		
+		Delete a TalkBack Command	
+		To delete an existing TalkBack command, send an HTTP DELETE.
+		The response will be the deleted command string, for example: OPENDOOR
 		"""
 		path = "/talkbacks/{0}/commands/{1}".format(self.__idtalkback, id)
 		result = self.__ins._Channels__ins._before_insert("DELETE", False, path, {'api_key':self.__key})
@@ -119,23 +124,24 @@ class TalkBack:
 
 	def update_execute(self, **parameters):
 		"""
-			Update a Channel and Execute the Next TalkBack Command
+		Update a Channel and Execute the Next TalkBack Command
 
-			The next TalkBack command in the queue (normally in position 1) can be executed at the same time a 
-			Channel is updated by sending an HTTP GET or POST to https://api.thingspeak.com/update. 
+		The next TalkBack command in the queue (normally in position 1) can be executed 
+		at the same time a Channel is updated by sending an HTTP GET or POST 
+		to https://api.thingspeak.com/update. 
 
-			Executing a command removes it from the queue, sets executed_at to the current time, sets position to null, 
-			and reorders the remaining commands. 
+		Executing a command removes it from the queue, sets executed_at to the current time, 
+		sets position to null, and reorders the remaining commands. 
 
-			Please note that the parameters for this action are different than other TalkBack commands. Since a Channel 
-			is being updated, the api_key parameter refers to the Channel API write key, while the talkback_key refers 
-			to the TalkBack API key.
+		Please note that the parameters for this action are different than other TalkBack commands. 
+		Since a Channel is being updated, the api_key parameter refers to the Channel 
+		API write key, while the talkback_key refers  to the TalkBack API key.
 
-			Valid parameters:
-				talkback_key (string) - API key for this specific TalkBack (required)
-				Additional parameters for updating a Channel can be found in the Channel API documentation. 
+		Valid parameters:
+		talkback_key (string) - API key for this specific TalkBack (required)
+		Additional parameters for updating a Channel can be found in the Channel API documentation. 
 
-			The response will be the command string, for example: OPENDOOR
+		The response will be the command string, for example: OPENDOOR
 		"""
 		__channel = [
 			"name", "description", "elevation", \
@@ -145,23 +151,25 @@ class TalkBack:
 		]
 
 		path = "/update"
-		result = self.__ins._Channels__ins._before_insert("PUT", False, "/update", {'api_key':self.__key}, __channel, **parameters)
+		result = self.__ins._Channels__ins._before_insert("PUT", False, "/update", \
+			{'api_key':self.__key}, __channel, **parameters)
 		return result
 
 	def delete_allcmd(self):
 		"""		
-			Delete All TalkBack Commands
-			To delete all of a TalkBack's commands, send an HTTP DELETE
+		Delete All TalkBack Commands
+		To delete all of a TalkBack's commands, send an HTTP DELETE
 		"""
 		path = "/talkbacks/{0}/commands".format(self.__idtalkback)
-		result = self.__ins._Channels__ins._before_insert("DELETE", False, path, {'api_key':self.__key})
+		result = self.__ins._Channels__ins._before_insert("DELETE", False, path, \
+			{'api_key':self.__key})
 		return result
 
 	def last_execute(self):
 		"""
-			Get the Last Executed Command
-			To show the most recently executed TalkBack command.
-			The response will be the command string, for example: OPENDOOR
+		Get the Last Executed Command
+		To show the most recently executed TalkBack command.
+		The response will be the command string, for example: OPENDOOR
 		"""
 		path = "/talkbacks/{0}/commands/last".format(self.__idtalkback)
 		result = self.__ins._Channels__ins._before_insert("GET", True, path, {'api_key':self.__key})
@@ -169,7 +177,7 @@ class TalkBack:
 
 	def list_cmd(self):
 		"""
-			To show all of a TalkBack's commands, send an HTTP GET. 
+		To show all of a TalkBack's commands, send an HTTP GET. 
 		"""
 		path = "/talkbacks/{0}/commands".format(self.__idtalkback)
 		result = self.__ins._Channels__ins._before_insert("GET", True, path, {'api_key':self.__key})
@@ -178,18 +186,18 @@ class TalkBack:
 class Channels(TalkBack):
 	
 	"""
-		Write API Key
-			In order to update a channel, you need to know your Write API Key. If your Write API Key gets 
-			compromised you can generate a new key. 
+	Write API Key
+	In order to update a channel, you need to know your Write API Key. If your Write API Key gets 
+	compromised you can generate a new key. 
 
-		Read Public API Key
-			The Read API Key allows your application to read data from the API. You can generate
-			multiple Read API Keys for different applications. 
-			Follow these steps to get a Read API Key: 
-			Select Channels
-			Select the Channel to update
-			Select Manage API Keys
-			Select Generate New Read API Key
+	Read Public API Key
+	The Read API Key allows your application to read data from the API. You can generate
+	multiple Read API Keys for different applications. 
+	Follow these steps to get a Read API Key: 
+	Select Channels
+	Select the Channel to update
+	Select Manage API Keys
+	Select Generate New Read API Key
 	"""
 	
 	def __init__(self, instance, result={}, keys={}):
@@ -201,61 +209,66 @@ class Channels(TalkBack):
 
 	def insert(self, **parameters):
 		"""
-			Sending Data
-				o update a Channel feed, send an HTTP GET or POST.
+		Sending Data update a Channel feed, send an HTTP GET or POST.
 
-			Valid parameters:
-				field1 (string) - Field 1 data (optional)
+		Valid parameters:
+		field1 (string) - Field 1 data (optional)
 
-				field2 (string) - Field 2 data (optional)
-				field3 (string) - Field 3 data (optional)
-				field4 (string) - Field 4 data (optional)
-				field5 (string) - Field 5 data (optional)
-				field6 (string) - Field 6 data (optional)
-				field7 (string) - Field 7 data (optional)
-				field8 (string) - Field 8 data (optional)
-				lat (decimal) - Latitude in degrees (optional)
-				long (decimal) - Longitude in degrees (optional)
-				elevation (integer) - Elevation in meters (optional)
-				status (string) - Status update message (optional)
-				twitter (string) - Twitter username linked to ThingTweet (optional)
-				tweet (string) - Twitter status update; see updating ThingTweet for more info (optional)
-				created_at (datetime) - Date when this feed entry was created, in ISO 8601 format,
-				for example: 2014-12-31 23:59:59 . Time zones can be specified via the timezone parameter (optional)
+		field2 (string) - Field 2 data (optional)
+		field3 (string) - Field 3 data (optional)
+		field4 (string) - Field 4 data (optional)
+		field5 (string) - Field 5 data (optional)
+		field6 (string) - Field 6 data (optional)
+		field7 (string) - Field 7 data (optional)
+		field8 (string) - Field 8 data (optional)
+		lat (decimal) - Latitude in degrees (optional)
+		long (decimal) - Longitude in degrees (optional)
+		elevation (integer) - Elevation in meters (optional)
+		status (string) - Status update message (optional)
+		twitter (string) - Twitter username linked to ThingTweet (optional)
+		tweet (string) - Twitter status update; see updating ThingTweet (optional)
+		created_at (datetime) - Date when this feed entry was created, in ISO 8601 format,
 		"""
+		
+		__valids = [
+			"field1", "field2", "field3", "field4", "field5", "field6", "field7", \
+			"field8", "created_at", "status", "latitude", "longitude", "elevation", "location"
+		]
+		
 		valid = 0
 		params = parameters.iteritems()
+		
 		if not valid:
 			for key, value in params:
-				if not key in ["field1", "field2", "field3", "field4", "field5", "field6", "field7", "field8",\
-				"created_at", "status", "latitude", "longitude", "elevation", "location"]:
+				if not key in __valids:
 					del parameters[key]
 		valid = 1
 		self.__ins._ThingSpeak__send(**parameters)
 
 	def update(self, **parameters):
 		"""
-			Update a Channel
-				To update a Channel, send an HTTP PUT.
+		Update a Channel
+		To update a Channel, send an HTTP PUT.
 
-			Valid parameters:
-				description (string) - Description of the Channel (optional)
-				elevation (integer) - Elevation in meters (optional)
-				field1 (string) - Field1 name (optional)
-				field2 (string) - Field2 name (optional)
-				field3 (string) - Field3 name (optional)
-				field4 (string) - Field4 name (optional)
-				field5 (string) - Field5 name (optional)
-				field6 (string) - Field6 name (optional)
-				field7 (string) - Field7 name (optional)
-				field8 (string) - Field8 name (optional)
-				latitude (decimal) - Latitude in degrees (optional)
-				longitude (decimal) - Longitude in degrees (optional)
-				metadata (text) - Metadata for the Channel, which can include JSON, XML, or any other data (optional)
-				name (string) - Name of the Channel (optional)
-				public_flag (true/false) - Whether the Channel should be public, default false (optional)
-				tags (string) - Comma-separated list of tags (optional)
-				url (string) - Webpage URL for the Channel (optional)
+		Valid parameters:
+		description (string) - Description of the Channel (optional)
+		elevation (integer) - Elevation in meters (optional)
+		field1 (string) - Field1 name (optional)
+		field2 (string) - Field2 name (optional)
+		field3 (string) - Field3 name (optional)
+		field4 (string) - Field4 name (optional)
+		field5 (string) - Field5 name (optional)
+		field6 (string) - Field6 name (optional)
+		field7 (string) - Field7 name (optional)
+		field8 (string) - Field8 name (optional)
+		latitude (decimal) - Latitude in degrees (optional)
+		longitude (decimal) - Longitude in degrees (optional)
+		metadata (text) - Metadata for the Channel (optional)
+		name (string) - Name of the Channel (optional)
+		public_flag (true/false) - Whether the Channel should be public, \ 
+			default false (optional)
+		tags (string) - Comma-separated list of tags (optional)
+		url (string) - Webpage URL for the Channel (optional)
 		"""
 
 		self.__ins.rd = True
@@ -277,32 +290,32 @@ class Channels(TalkBack):
 
 	def feed(self, **parameters): # get
 		"""
-			Get a Channel Feed
-				To view a Channel feed, send an HTTP GET-
+		Get a Channel Feed
+		To view a Channel feed, send an HTTP GET-
 
-			Valid parameters:
-				results (integer) Number of entries to retrieve, 8000 max, default of 100 (optional)
-				days (integer) Number of 24-hour periods before now to include in feed (optional)
-				start (datetime) Start date in format YYYY-MM-DD%20HH:NN:SS (optional)
-				end (datetime) End date in format YYYY-MM-DD%20HH:NN:SS (optional)
-				timezone (string) Timezone identifier for this request (optional)
-				offset (integer) Timezone offset that results should be displayed in.
-				status (true/false) Include status updates in feed by setting "status=true" (optional)
-				metadata (true/false) Include Channel's metadata by setting "metadata=true" (optional)
-				location (true/false) Include latitude, longitude, and elevation in feed by setting "location=true" (optional)
-				min (decimal) Minimum value to include in response (optional)
-				max (decimal) Maximum value to include in response (optional)
-				round (integer) Round to this many decimal places (optional)
+		Valid parameters:
+		results (integer) Number of entries to retrieve, 8000 max, default of 100 (optional)
+		days (integer) Number of 24-hour periods before now to include in feed (optional)
+		start (datetime) Start date in format YYYY-MM-DD%20HH:NN:SS (optional)
+		end (datetime) End date in format YYYY-MM-DD%20HH:NN:SS (optional)
+		timezone (string) Timezone identifier for this request (optional)
+		offset (integer) Timezone offset that results should be displayed in.
+		status (true/false) Include status updates in feed by setting "status=true" (optional)
+		metadata (true/false) Include Channel's metadata by setting "metadata=true" (optional)
+		location (true/false) Include lat, long, and elevation in feed by setting "location=true" (optional)
+		min (decimal) Minimum value to include in response (optional)
+		max (decimal) Maximum value to include in response (optional)
+		round (integer) Round to this many decimal places (optional)
 
-				Valid values: 10, 15, 20, 30, 60, 240, 720, 1440, "daily" (optional)
-					timescale (integer or string) Get first value in this many minutes,
-					sum (integer or string) Get sum of this many minutes, valid values
-					average (integer or string) Get average of this many minutes
-					median (integer or string) Get median of this many minutes
+		Valid values: 10, 15, 20, 30, 60, 240, 720, 1440, "daily" (optional)
+		timescale (integer or string) Get first value in this many minutes,
+		sum (integer or string) Get sum of this many minutes, valid values
+		average (integer or string) Get average of this many minutes
+		median (integer or string) Get median of this many minutes
 		"""
 		__feed = [
-			"results", "days", "start", "end", "timezone", "offset", "status", "metadata", "location", "min", "max", "round"
-			"timescale", "sum", "average", "median"
+			"results", "days", "start", "end", "timezone", "offset", "status", "metadata", \
+			"location", "min", "max", "round", "timescale", "sum", "average", "median"
 		]
 		path = "/channels/{0}/feeds.json".format(self.settings['id'])
 		result = self.__ins._before_insert("GET", True, path, "write", __feed, **parameters)
@@ -310,8 +323,8 @@ class Channels(TalkBack):
 
 	def clear(self): # get
 		"""
-			Clear a Channel
-				To clear all feed data from a Channel, send an HTTP DELETE.
+		Clear a Channel
+			To clear all feed data from a Channel, send an HTTP DELETE.
 		"""
 
 		path = "/channels/{0}/feeds.json".format(self.settings['id']) # DELETE
@@ -320,8 +333,8 @@ class Channels(TalkBack):
 
 	def delete(self): # delete
 		"""
-			Delete a Channel
-				To create a new Channel, send an HTTP DELETE.
+		Delete a Channel
+			To create a new Channel, send an HTTP DELETE.
 		"""
 		path = "/channels/{0}.json".format(self.settings['id']) # DELETE
 		result = self.__ins._ThingSpeak__insert("DELETE", path)
@@ -329,34 +342,34 @@ class Channels(TalkBack):
 
 	def fieldfeed(self, **parameters): # get
 		"""
-			Get a Channel Field Feed
-				To view a Channel's field feed, send an HTTP GET.
+		Get a Channel Field Feed
+			To view a Channel's field feed, send an HTTP GET.
 
-			Valid parameters:
-				nro_field (integer) umber of entries to retrieve, 8000 max, default of 100 (optional)
-				results (integer) Number of entries to retrieve, 8000 max, default of 100 (optional)
-				days (integer) Number of 24-hour periods before now to include in feed (optional)
-				start (datetime) Start date in format YYYY-MM-DD%20HH:NN:SS (optional)
-				end (datetime) End date in format YYYY-MM-DD%20HH:NN:SS (optional)
-				timezone (string) Timezone identifier for this request (optional)
-				offset (integer) Timezone offset that results should be displayed in.
-				status (true/false) Include status updates in feed by setting "status=true" (optional)
-				metadata (true/false) Include Channel's metadata by setting "metadata=true" (optional)
-				location (true/false) Include latitude, longitude, and elevation in feed by setting "location=true" (optional)
-				min (decimal) Minimum value to include in response (optional)
-				max (decimal) Maximum value to include in response (optional)
-				round (integer) Round to this many decimal places (optional)
-				
-				Valid values: 10, 15, 20, 30, 60, 240, 720, 1440, "daily" (optional)
-					timescale (integer or string) Get first value in this many minutes
-					sum (integer or string) Get sum of this many minutes
-					average (integer or string) Get average of this many minutes
-					median (integer or string) Get median of this many minutes
+		Valid parameters:
+		nro_field (integer) umber of entries to retrieve, 8000 max, default of 100 (optional)
+		results (integer) Number of entries to retrieve, 8000 max, default of 100 (optional)
+		days (integer) Number of 24-hour periods before now to include in feed (optional)
+		start (datetime) Start date in format YYYY-MM-DD%20HH:NN:SS (optional)
+		end (datetime) End date in format YYYY-MM-DD%20HH:NN:SS (optional)
+		timezone (string) Timezone identifier for this request (optional)
+		offset (integer) Timezone offset that results should be displayed in.
+		status (true/false) Include status updates in feed by setting "status=true" (optional)
+		metadata (true/false) Include Channel's metadata by setting "metadata=true" (optional)
+		location (true/false) Include lat, long, and elevation in feed by setting "location=true" (optional)
+		min (decimal) Minimum value to include in response (optional)
+		max (decimal) Maximum value to include in response (optional)
+		round (integer) Round to this many decimal places (optional)
+		
+		Valid values: 10, 15, 20, 30, 60, 240, 720, 1440, "daily" (optional)
+		timescale (integer or string) Get first value in this many minutes
+		sum (integer or string) Get sum of this many minutes
+		average (integer or string) Get average of this many minutes
+		median (integer or string) Get median of this many minutes
 		"""
 
 		__fieldfeed = [
-			"results", "days", "start", "end", "timezone", "offset", "status", "metadata", "location", "min", "max", "round"
-			"timescale", "sum", "average", "median"
+			"results", "days", "start", "end", "timezone", "offset", "status", "metadata", "location", \
+			"min", "max", "round", "timescale", "sum", "average", "median"
 		]
 		
 		path = "/channels/{0}/fields/{1}.json".format(self.settings['id'], parameters.get("nro_field")) # GET
@@ -366,9 +379,8 @@ class Channels(TalkBack):
 	
 	def view(self): # get
 		"""
-			View a Channel
-				To view a specific Channel, send an HTTP GET to https://api.thingspeak.com/channels/CHANNEL_ID.json .
-
+		View a Channel
+			To view a specific Channel, send an HTTP GET.
 		"""
 
 		path = "/channels/{0}.json".format(self.settings['id']) # GET
@@ -385,7 +397,8 @@ class Channels(TalkBack):
 				tag (string) Name of tag to search for (optional)
 				username (string) Person's username that you want to search Channels for (optional)
 
-				You can also search for Channels within a certain distance of a location by including the following location :
+				You can also search for Channels within a certain distance of a location \
+				by including the following location :
 					latitude (decimal) - Latitude of location in degrees. (optional)
 					longitude (decimal) - Longitude of location in degrees. (optional)
 					distance (decimal) - Distance in kilometers from location. (optional)
@@ -426,7 +439,8 @@ class Channels(TalkBack):
 				timezone (string) Timezone identifier for this request (optional)
 				offset (integer) Timezone offset that results should be displayed in.
 				status (true/false) Include status updates in feed by setting "status=true" (optional)
-				location (true/false) Include latitude, longitude, and elevation in feed by setting "location=true" (optional)
+				location (true/false) Include latitude, longitude, and \
+				elevation in feed by setting "location=true" (optional)
 		"""
 
 		__lastentry = [
@@ -519,7 +533,8 @@ class ThingSpeak(httplib.HTTPSConnection):
 			response = self.getresponse()
 		except Exception, e:
 			self.close()
-			raise ValueError("no me pude conectar {0}, {1}, {2}, {3}".format(method, path, params, e))
+			raise ValueError("no me pude conectar {0}, {1}, {2}, {3}"\
+				.format(method, path, params, e))
 
 		if self.rs:
 			reshead = dict(response.getheaders() + [("status", response.status)])
@@ -534,9 +549,11 @@ class ThingSpeak(httplib.HTTPSConnection):
 				self.rd = False
 				return data
 		elif reshead['status'] in (301, 302, 303, 307, 308):
-			return ValueError("no me pude conectar redireccionamiento {0}".format(reshead['status']))
+			return ValueError("no me pude conectar redireccionamiento {0}"\
+				.format(reshead['status']))
 		elif reshead['status'] in (400, 401, 403, 404):
-			return ValueError("no me pude conectar api_key o host, invalid {0}".format(reshead['status']))
+			return ValueError("no me pude conectar api_key o host, invalid {0}"\
+				.format(reshead['status']))
 		elif reshead['status'] in (502, 503, 504):
 			return ValueError("no me pude conectar {0}".format(reshead['status']))
 	
@@ -592,27 +609,27 @@ class ThingSpeak(httplib.HTTPSConnection):
 
 	def created(self, **parameters):
 		"""
-			Create a Channel
-				To create a new Channel, send an HTTP POST.
+		Create a Channel
+		To create a new Channel, send an HTTP POST.
 
-			Valid parameters:
-				description (string) - Description of the Channel (optional)
-				elevation (integer) - Elevation in meters (optional)
-				field1 (string) - Field1 name (optional)
-				field2 (string) - Field2 name (optional)
-				field3 (string) - Field3 name (optional)
-				field4 (string) - Field4 name (optional)
-				field5 (string) - Field5 name (optional)
-				field6 (string) - Field6 name (optional)
-				field7 (string) - Field7 name (optional)
-				field8 (string) - Field8 name (optional)
-				latitude (decimal) - Latitude in degrees (optional)
-				longitude (decimal) - Longitude in degrees (optional)
-				metadata (text) - Metadata for the Channel, which can include JSON, XML, or any other data (optional)
-				name (string) - Name of the Channel (optional)
-				public_flag (true/false) - Whether the Channel should be public, default false (optional)
-				tags (string) - Comma-separated list of tags (optional)
-				url (string) - Webpage URL for the Channel (optional)
+		Valid parameters:
+		description (string) - Description of the Channel (optional)
+		elevation (integer) - Elevation in meters (optional)
+		field1 (string) - Field1 name (optional)
+		field2 (string) - Field2 name (optional)
+		field3 (string) - Field3 name (optional)
+		field4 (string) - Field4 name (optional)
+		field5 (string) - Field5 name (optional)
+		field6 (string) - Field6 name (optional)
+		field7 (string) - Field7 name (optional)
+		field8 (string) - Field8 name (optional)
+		latitude (decimal) - Latitude in degrees (optional)
+		longitude (decimal) - Longitude in degrees (optional)
+		metadata (text) - Metadata for the Channel, which can include JSON, XML, or any other data (optional)
+		name (string) - Name of the Channel (optional)
+		public_flag (true/false) - Whether the Channel should be public, default false (optional)
+		tags (string) - Comma-separated list of tags (optional)
+		url (string) - Webpage URL for the Channel (optional)
 		"""
 		
 		__channel = [
@@ -661,12 +678,15 @@ class ThingSpeak(httplib.HTTPSConnection):
 if __name__ == '__main__':
 	
 	"""
-		channel tiene que disponer de su api_key
-		settings tiene que disponer de las api Keys de account + del sensor (Write, Read)
+	channel tiene que disponer de su api_key
+	settings tiene que disponer de las api Keys de account + del sensor (Write, Read)
 	"""
-	channel = ThingSpeak(accountkey="K8P9HHY4RM85BUP8")
 
-	sensor3 = channel.instance(id=27992, accountkey="K8P9HHY4RM85BUP8", writekey="IJI9SJDSAFJYDBR2", readkey="")
+	APIKEY = "K8P9HHY4RM85BUP8"
+	WRITEKEY = "IJI9SJDSAFJYDBR2"
+
+	channel = ThingSpeak(accountkey=APIKEY)
+	sensor3 = channel.instance(id=27992, accountkey=APIKEY, writekey=WRITEKEY, readkey="")
 	sensor3.update(
 		field1="heladera",
 	 	field2="cocina",
