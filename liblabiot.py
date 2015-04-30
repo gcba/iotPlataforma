@@ -18,6 +18,7 @@ listendpoints = opencfg('listpaths.cfg')
 
 # asignamos los parametros de configuracion
 # funcion para el request
+
 def __request(username, password, url, query_args):
 
 	try:
@@ -52,9 +53,9 @@ def functpost():
 		query_args = urllib.urlencode({
 			"id": sensor,
 			"datatype1" : datatype[0],
-			"data1": random.randrange(20),
+			"data1": random.randrange(20), # random.uniform(1.5, 1.9)
 			"datatype2" : datatype[1],
-			"data2": random.randrange(80),
+			"data2": random.randrange(80), # random.uniform(1.5, 1.9)
 		})
 
 		result = __request(username, password, urlpath, query_args)

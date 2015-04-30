@@ -1,16 +1,11 @@
-import time
 import urllib
 import json
 import httplib
-import os
-import time
-import datetime
-from datetime import datetime
-import threading
-from liblabiot import opencfg
 import base64
 import urllib2
 import types
+
+from liblabiot import opencfg
 
 borneras_aire_2d = ["9031", "9033", "9035"]
 borneras_tomas_2d = ["9034", "9051", "9052", "9053", "9054", "9055", "9056"]
