@@ -1,11 +1,15 @@
+import time
 import urllib
 import json
 import httplib
+import os
+
+from datetime import datetime
+from liblabiot import opencfg
+
 import base64
 import urllib2
 import types
-
-from liblabiot import opencfg
 
 borneras_aire_2d = ["9031", "9033", "9035"]
 borneras_tomas_2d = ["9034", "9051", "9052", "9053", "9054", "9055", "9056"]
@@ -39,7 +43,8 @@ def GET(url):
             result = dict(json.load(response))
             # print result
             if result.has_key('data'):
-                return result['data'][0]['proc']
+                if result['data'][0]['proc']:
+                    return result['data'][0]['proc']
             else:
                 return 0
         elif response.code == 500:
